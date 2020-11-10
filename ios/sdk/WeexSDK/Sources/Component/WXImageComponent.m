@@ -507,6 +507,7 @@ WX_EXPORT_METHOD(@selector(save:))
             }
             UIImageView *imageView = (UIImageView *)strongSelf.view;
             if (imageView && imageView.image != image) {
+                imageView.image = nil;
                 imageView.image = image;
             }
             if (strongSelf.imageLoadEvent) {
