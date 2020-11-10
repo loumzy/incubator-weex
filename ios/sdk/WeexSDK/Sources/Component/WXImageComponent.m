@@ -455,14 +455,20 @@ WX_EXPORT_METHOD(@selector(save:))
                 __strong typeof(weakSelf) strongSelf = weakSelf;
                 if (strongSelf) {
                     UIImageView *imageView = (UIImageView *)strongSelf.view;
-                    if (imageView && imageView.image == image && strongSelf->_mainImageSuccess) {
-                        // reload image with main image url
-                        NSString* newURL = [choosedSrc copy];
-                        WX_REWRITE_URL(choosedSrc, WXResourceTypeImage, strongSelf.weexInstance)
-                        NSDictionary *userInfo = @{@"imageQuality":@(strongSelf.imageQuality), @"imageSharp":@(strongSelf.imageSharp),  @"blurRadius":@(strongSelf.blurRadius), @"instanceId":[strongSelf _safeInstanceId], @"pageURL": strongSelf.weexInstance.scriptURL ?: @""};
-                        [[strongSelf imageLoader] setImageViewWithURL:imageView url:[NSURL URLWithString:newURL] placeholderImage:nil options:userInfo progress:nil completed:^(UIImage *image, NSError *error, WXImageLoaderCacheType cacheType, NSURL *imageURL) {
-                            WXLogInfo(@"Image re-requested because placeholder may override main image. %@", imageURL);
-                        }];
+                    if (imageView) {
+                        if (imageView.image) {
+                            if (imageView.image == image && strongSelf->_mainImageSuccess) {
+                                // reload image with main image url
+                                NSString* newURL = [choosedSrc copy];
+                                WX_REWRITE_URL(choosedSrc, WXResourceTypeImage, strongSelf.weexInstance)
+                                NSDictionary *userInfo = @{@"imageQuality":@(strongSelf.imageQuality), @"imageSharp":@(strongSelf.imageSharp),  @"blurRadius":@(strongSelf.blurRadius), @"instanceId":[strongSelf _safeInstanceId], @"pageURL": strongSelf.weexInstance.scriptURL ?: @""};
+                                [[strongSelf imageLoader] setImageViewWithURL:imageView url:[NSURL URLWithString:newURL] placeholderImage:nil options:userInfo progress:nil completed:^(UIImage *image, NSError *error, WXImageLoaderCacheType cacheType, NSURL *imageURL) {
+                                    WXLogInfo(@"Image re-requested because placeholder may override main image. %@", imageURL);
+                                }];
+                            }
+                        }else {
+                            imageView.image = image;
+                        }
                     }
                 }
             }];
