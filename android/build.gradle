@@ -58,6 +58,7 @@ ext {
     targetSdkVersion=28
     supportLibVersion="28.0.0"
     fastjsonLibVersion="1.1.70.android"
+    apachePackageName=true
     //Default value for disableCov is false
     disableCov = project.hasProperty("disableCov") && disableCov.equals("true")
     useApachePackageName = project.hasProperty('apachePackageName') ? project.property('apachePackageName').toBoolean() : false
